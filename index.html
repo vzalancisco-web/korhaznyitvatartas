@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kórház Menza – Nyitvatartás</title>
+<meta name="description" content="A Kórház menza nyitvatartása, étkezési idők és gyakori kérdések.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314304D'/%3E%3Ccircle cx='16' cy='16' r='10.5' fill='%23fff'/%3E%3Cpath d='M14 10h4v4h4v4h-4v4h-4v-4h-4v-4h4z' fill='%23D8452E'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#14304D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tile:#DDE9E4; --grout:#C7D9D1; --navy:#14304D; --sign:#F5C518; --red:#D8452E; --paper:#F6FAF8; --green:#2E9E6B;
+  --display:"Bricolage Grotesque","Arial Black",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font:1.0625rem/1.6 var(--body);color:var(--navy);background:var(--paper)}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:4px}
+.wrap{width:min(1120px,100% - 2.5rem);margin-inline:auto}
+
+/* top bar */
+header{background:var(--navy);color:#fff}
+header .wrap{display:flex;align-items:center;gap:.75rem;height:60px;font:700 1.05rem var(--display)}
+header svg{width:30px;height:30px;flex:none}
+header span{margin-left:auto;font:400 .95rem var(--body);opacity:.8}
+
+/* hero: tiled corridor wall */
+.hero{
+  background-color:var(--tile);
+  background-image:linear-gradient(var(--grout) 2px,transparent 2px),linear-gradient(90deg,var(--grout) 2px,transparent 2px);
+  background-size:72px 72px;
+  border-bottom:10px solid var(--sign);
+  overflow:hidden;
+}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:2rem;align-items:center;padding-block:clamp(2.5rem,7vw,5.5rem)}
+h1{font:800 clamp(3.4rem,10.5vw,8.6rem)/.88 var(--display);letter-spacing:-.045em;font-variation-settings:"opsz" 96}
+h1 .l{display:block;overflow:hidden;padding-bottom:.06em}
+h1 .l i{display:block;font-style:normal;transform:translateY(105%);animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards}
+h1 .l:nth-child(2) i{animation-delay:.12s}
+@keyframes rise{to{transform:none}}
+.status{
+  display:inline-flex;align-items:center;gap:.9rem;margin-top:2rem;padding:.9rem 1.3rem;
+  background:var(--sign);border:3px solid var(--navy);border-radius:6px;box-shadow:6px 6px 0 var(--navy);
+  font:700 1.15rem/1.3 var(--display);max-width:100%
+}
+.dot{width:16px;height:16px;border-radius:50%;background:var(--red);flex:none;border:2px solid var(--navy)}
+.status.open .dot{background:var(--green);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,158,107,.7)}100%{box-shadow:0 0 0 14px rgba(46,158,107,0)}}
+.status small{display:block;font:400 .95rem var(--body);margin-top:.15rem}
+.clockbox{justify-self:center;width:min(100%,380px);text-align:center}
+.clockbox svg{width:100%;height:auto;filter:drop-shadow(8px 10px 0 rgba(20,48,77,.18))}
+.clockbox p{margin-top:1rem;font-size:.95rem}
+.hand{transform-origin:150px 150px;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.hand.sweep{transition:transform 1.8s cubic-bezier(.2,.9,.25,1.05)}
+
+/* sections */
+section{padding-block:clamp(3rem,7vw,5.5rem)}
+h2{font:800 clamp(2rem,5vw,3.2rem)/1 var(--display);letter-spacing:-.03em;margin-bottom:.6rem}
+.lead{max-width:56ch;margin-bottom:2.2rem}
+
+.groups{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.group{border:3px solid var(--navy);border-radius:8px;padding:1.4rem 1.5rem;background:#fff;transition:background .3s,color .3s}
+.group.today{background:var(--navy);color:#fff;box-shadow:8px 8px 0 var(--sign)}
+.group h3{display:flex;align-items:center;gap:.7rem;font:800 1.5rem var(--display);margin-bottom:.4rem}
+.badge{display:none;font:700 .85rem var(--body);background:var(--sign);color:var(--navy);padding:.1rem .6rem;border-radius:99px}
+.today .badge{display:inline-block}
+.group .days{font-size:.95rem;opacity:.75;margin-bottom:1rem}
+.row{display:flex;align-items:baseline;gap:.8rem;padding:.8rem 0;border-top:2px dashed currentColor;border-top-color:rgba(127,145,160,.45)}
+.row b{font:700 1.2rem var(--display);flex:1}
+.row time{font:800 1.5rem var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.today .row.live b{color:var(--sign)}
+.live-tag{display:none;font:700 .8rem var(--body);background:var(--green);color:#fff;padding:.05rem .55rem;border-radius:99px;margin-left:.5rem;vertical-align:middle}
+.row.live .live-tag{display:inline-block}
+.note{margin-top:1.4rem;font-size:.95rem;max-width:62ch}
+
+/* faq */
+.faq{background:var(--tile);border-top:3px solid var(--navy)}
+.q{border-bottom:3px solid var(--navy)}
+.q:first-of-type{border-top:3px solid var(--navy)}
+.q button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:1rem;width:100%;padding:1.2rem .3rem;font:700 1.25rem/1.3 var(--display)}
+.q button:focus-visible{outline:3px solid var(--red);outline-offset:-3px}
+.q button:hover{background:rgba(245,197,24,.35)}
+.pm{position:relative;width:26px;height:26px;flex:none;background:var(--navy);border-radius:50%}
+.pm::before,.pm::after{content:"";position:absolute;left:7px;right:7px;top:12px;height:2px;background:#fff;transition:transform .35s cubic-bezier(.3,1.5,.5,1)}
+.pm::after{transform:rotate(90deg)}
+.q.open .pm::after{transform:rotate(0)}
+.q.open .pm{background:var(--red)}
+.a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.3,.9,.3,1)}
+.q.open .a{grid-template-rows:1fr}
+.a>div{overflow:hidden}
+.a p{padding:0 3.5rem 1.4rem .3rem;max-width:68ch}
+
+footer{background:var(--navy);color:#fff;padding-block:2rem;font-size:.95rem}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem}
+footer a{color:var(--sign)}
+
+/* cookie dialog */
+#ck{position:fixed;inset:0;z-index:20;display:grid;align-items:end;justify-items:center;padding:1rem;background:rgba(20,48,77,.62);transition:opacity .4s,visibility .4s}
+#ck.gone{opacity:0;visibility:hidden}
+#ck .card{width:min(520px,100%);background:#fff;border:3px solid var(--navy);border-radius:10px;padding:1.5rem;box-shadow:8px 8px 0 var(--sign);transition:transform .5s cubic-bezier(.3,1.3,.5,1);animation:up .7s .5s cubic-bezier(.2,1.2,.4,1) backwards}
+#ck.gone .card{transform:translateY(40px)}
+@keyframes up{from{transform:translateY(120%)}}
+#ck h2{font-size:1.5rem;margin-bottom:.4rem}
+#ck p{font-size:.98rem;margin-bottom:1.1rem}
+#ck button{cursor:pointer;font:700 1.05rem var(--display);background:var(--navy);color:#fff;border:3px solid var(--navy);border-radius:6px;padding:.7rem 1.6rem;transition:transform .15s,box-shadow .15s}
+#ck button:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--red)}
+#ck button:active{transform:none;box-shadow:none}
+
+@media (max-width:820px){
+  .hero .wrap,.groups{grid-template-columns:1fr}
+  .clockbox{width:min(100%,300px)}
+  .a p{padding-right:.3rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  h1 .l i{transform:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#F5C518"/><path d="M13 7h6v6h6v6h-6v6h-6v-6H7v-6h6z" fill="#14304D"/></svg>
+    Kórház
+    <span>Menza</span>
+  </div>
+</header>
+
+<main>
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1><span class="l"><i>Kórház</i></span><span class="l"><i>Menza</i></span></h1>
+      <div class="status" id="status" role="status" aria-live="polite">
+        <span class="dot"></span>
+        <div><span id="st-main">Egy pillanat…</span><small id="st-sub"></small></div>
+      </div>
+    </div>
+    <div class="clockbox">
+      <svg viewBox="0 0 300 300" role="img" aria-label="Óra, a sárga sávok az étkezések idejét mutatják" id="clock">
+        <circle cx="150" cy="150" r="144" fill="#14304D"/>
+        <circle cx="150" cy="150" r="130" fill="#fff"/>
+        <g id="arcs" fill="none" stroke="#F5C518" stroke-width="16" stroke-linecap="butt"></g>
+        <g id="ticks" stroke="#14304D"></g>
+        <g id="nums" font-family="Bricolage Grotesque,Arial Black,sans-serif" font-weight="800" font-size="22" fill="#14304D" text-anchor="middle" dominant-baseline="central"></g>
+        <line id="hh" class="hand" x1="150" y1="150" x2="150" y2="90" stroke="#14304D" stroke-width="9" stroke-linecap="round"/>
+        <line id="mm" class="hand" x1="150" y1="150" x2="150" y2="62" stroke="#14304D" stroke-width="6" stroke-linecap="round"/>
+        <line id="ss" class="hand" x1="150" y1="168" x2="150" y2="58" stroke="#D8452E" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="150" cy="150" r="8" fill="#D8452E"/>
+      </svg>
+      <p>A sárga sáv az étkezések ideje ma.</p>
+    </div>
+  </div>
+</div>
+
+<section id="nyitvatartas">
+  <div class="wrap">
+    <h2>Nyitvatartás</h2>
+    <p class="lead">Napi háromszor főzünk. Az étkezési idők alatt a pult végig nyitva van, a kiadás az utolsó percig tart.</p>
+    <div class="groups">
+      <article class="group" id="g-wk">
+        <h3>Hétköznap <span class="badge">Ma</span></h3>
+        <p class="days">Hétfőtől péntekig</p>
+        <div class="rows"></div>
+      </article>
+      <article class="group" id="g-we">
+        <h3>Hétvégén <span class="badge">Ma</span></h3>
+        <p class="days">Szombaton és vasárnap</p>
+        <div class="rows"></div>
+      </article>
+    </div>
+    <p class="note">Ünnepnapokon a hétvégi rend érvényes. Az aktuális változásokat a pultnál és a bejáratnál is kifüggesztjük.</p>
+  </div>
+</section>
+
+<section class="faq" id="gyik">
+  <div class="wrap">
+    <h2>Gyakori kérdések</h2>
+    <p class="lead">Ha valamire nem találsz választ, kérdezd meg a pultnál.</p>
+    <div id="qs">
+      <div class="q"><button aria-expanded="false"><span>Bemehetnek a látogatók is?</span><i class="pm"></i></button><div class="a"><div><p>Igen. A menza a dolgozóké, a betegeké és a látogatóké is. Nem kell előre jelentkezni, elég odamenni.</p></div></div></div>
+      <div class="q"><button aria-expanded="false"><span>Mivel lehet fizetni?</span><i class="pm"></i></button><div class="a"><div><p>Készpénzzel és bankkártyával is. A dolgozók a munkahelyi étkezési kártyájukat is használhatják.</p></div></div></div>
+      <div class="q"><button aria-expanded="false"><span>Hol látom, mi a mai menü?</span><i class="pm"></i></button><div class="a"><div><p>A napi menüt reggel kitesszük a bejáratnál lévő táblára, és a pultnál is megtalálod. Az allergéneket minden ételnél jelöljük.</p></div></div></div>
+      <div class="q"><button aria-expanded="false"><span>Van diétás vagy vegetáriánus választék?</span><i class="pm"></i></button><div class="a"><div><p>Mindennap van legalább egy húsmentes főétel. Ha speciális étrendet kell követned, szólj a pultosnak, segít kiválasztani, mi fér bele.</p></div></div></div>
+      <div class="q"><button aria-expanded="false"><span>Vihetek ételt elvitelre?</span><i class="pm"></i></button><div class="a"><div><p>Igen, az ebéd és a vacsora elvihető dobozban. A doboz ára a végösszegben szerepel.</p></div></div></div>
+      <div class="q"><button aria-expanded="false"><span>Hová menjek, ha a menza zárva van?</span><i class="pm"></i></button><div class="a"><div><p>A zárás utáni időszakra a földszinti automatából kapsz italt és harapnivalót, ez egész nap elérhető.</p></div></div></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>Kórház Menza · Főépület, földszint</div>
+    <div>Hiba az oldalon? <a href="#nyitvatartas">Vissza a nyitvatartáshoz</a></div>
+  </div>
+</footer>
+
+<div id="ck" role="dialog" aria-modal="true" aria-labelledby="ck-t" hidden>
+  <div class="card">
+    <h2 id="ck-t">Sütiket használunk</h2>
+    <p>Az oldal működéséhez és a látogatottság méréséhez sütiket használunk. A folytatáshoz kérjük, fogadd el őket.</p>
+    <button id="ck-ok">Elfogadom</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* Nyitvatartás: itt szerkeszthető */
+  var S={
+    wk:[["Reggeli","06:30","09:00"],["Ebéd","11:30","14:30"],["Vacsora","17:00","18:30"]],
+    we:[["Reggeli","07:30","09:00"],["Ebéd","12:00","14:00"],["Vacsora","17:00","18:00"]]
+  };
+  var DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  var NAMES={Mon:"hétfőn",Tue:"kedden",Wed:"szerdán",Thu:"csütörtökön",Fri:"pénteken",Sat:"szombaton",Sun:"vasárnap"};
+  var $=function(id){return document.getElementById(id)};
+  var fmt=function(t){return t.replace(/^0/,"")};
+  var mins=function(t){var p=t.split(":");return +p[0]*60+ +p[1]};
+  var kind=function(d){return d==="Sat"||d==="Sun"?"we":"wk"};
+
+  function now(){
+    var p={};
+    new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Budapest",weekday:"short",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"})
+      .formatToParts(new Date()).forEach(function(x){p[x.type]=x.value});
+    return {d:p.weekday,h:+p.hour,m:+p.minute,s:+p.second};
+  }
+
+  /* óralap */
+  var NS="http://www.w3.org/2000/svg";
+  var ticks=$("ticks"),nums=$("nums");
+  for(var i=0;i<60;i++){
+    var a=i*6*Math.PI/180,big=i%5===0,r1=big?112:119,r2=124;
+    var l=document.createElementNS(NS,"line");
+    l.setAttribute("x1",150+Math.sin(a)*r1);l.setAttribute("y1",150-Math.cos(a)*r1);
+    l.setAttribute("x2",150+Math.sin(a)*r2);l.setAttribute("y2",150-Math.cos(a)*r2);
+    l.setAttribute("stroke-width",big?3:1.2);ticks.appendChild(l);
+  }
+  [12,3,6,9].forEach(function(n){
+    var a=n*30*Math.PI/180,t=document.createElementNS(NS,"text");
+    t.setAttribute("x",150+Math.sin(a)*90);t.setAttribute("y",150-Math.cos(a)*90);
+    t.textContent=n;nums.appendChild(t);
+  });
+  function arc(t0,t1){
+    var r=104,f=function(m){var a=(m/720)*2*Math.PI;return [150+Math.sin(a)*r,150-Math.cos(a)*r]};
+    var s=f(t0%720),e=f(t1%720),large=(t1-t0)>360?1:0;
+    var p=document.createElementNS(NS,"path");
+    p.setAttribute("d","M"+s[0]+" "+s[1]+"A"+r+" "+r+" 0 "+large+" 1 "+e[0]+" "+e[1]);
+    return p;
+  }
+
+  /* órarend kirajzolása */
+  function build(n){
+    ["wk","we"].forEach(function(k){
+      var box=$("g-"+k),rows=box.querySelector(".rows");
+      rows.innerHTML=S[k].map(function(m,i){
+        return '<div class="row" data-i="'+i+'"><b>'+m[0]+'<span class="live-tag">Most nyitva</span></b><time>'+fmt(m[1])+'–'+fmt(m[2])+'</time></div>';
+      }).join("");
+      box.classList.toggle("today",kind(n.d)===k);
+    });
+    var arcs=$("arcs");arcs.innerHTML="";
+    S[kind(n.d)].forEach(function(m){arcs.appendChild(arc(mins(m[1]),mins(m[2])))});
+  }
+
+  var last="";
+  function status(n){
+    var k=kind(n.d),cur=n.h*60+n.m,list=S[k],open=-1,next=-1,i;
+    for(i=0;i<list.length;i++){
+      if(cur>=mins(list[i][1])&&cur<mins(list[i][2])){open=i;break}
+      if(cur<mins(list[i][1])&&next<0)next=i;
+    }
+    document.querySelectorAll("#g-"+k+" .row").forEach(function(r,j){r.classList.toggle("live",j===open)});
+    var main,sub,isOpen=open>=0;
+    if(isOpen){
+      main="Most nyitva: "+list[open][0].toLowerCase();
+      sub="Kiadás "+fmt(list[open][2])+"-ig.";
+    }else{
+      main="Most zárva";
+      if(next>=0){sub="Következő: "+list[next][0].toLowerCase()+", ma "+fmt(list[next][1])+"-kor."}
+      else{
+        var td=DAYS[(DAYS.indexOf(n.d)+1)%7],f=S[kind(td)][0];
+        sub="Holnap "+fmt(f[1])+"-kor nyitunk ("+f[0].toLowerCase()+").";
+      }
+    }
+    var key=main+sub;
+    if(key!==last){
+      last=key;$("st-main").textContent=main;$("st-sub").textContent=sub;
+      $("status").classList.toggle("open",isOpen);
+    }
+  }
+
+  /* mutatók */
+  var hh=$("hh"),mm=$("mm"),ss=$("ss");
+  function angles(n){return {s:n.s*6,m:(n.m+n.s/60)*6,h:((n.h%12)+n.m/60)*30}}
+  function setHands(n,spin){
+    var a=angles(n);
+    hh.style.transform="rotate("+(a.h+(spin?720:0))+"deg)";
+    mm.style.transform="rotate("+(a.m+(spin?1440:0))+"deg)";
+    ss.style.transform="rotate("+(a.s+(spin?2160:0))+"deg)";
+  }
+
+  var n0=now();
+  build(n0);status(n0);
+  var still=window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+  [hh,mm,ss].forEach(function(h){h.style.transform="rotate(0deg)"});
+  if(still){setHands(n0,false)}
+  else{
+    [hh,mm,ss].forEach(function(h){h.classList.add("sweep")});
+    setTimeout(function(){setHands(n0,true)},350);
+    setTimeout(function(){
+      [hh,mm,ss].forEach(function(h){h.classList.remove("sweep")});
+      /* normalizálás animáció nélkül, hogy a teljes körök ne pörögjenek vissza */
+      [hh,mm,ss].forEach(function(h){h.style.transition="none"});
+      setHands(now(),false);
+      void hh.getBoundingClientRect();
+      [hh,mm,ss].forEach(function(h){h.style.transition=""});
+      tick();
+    },2300);
+  }
+  var prev=n0;
+  function tick(){
+    var n=now();
+    if(n.d!==prev.d){build(n)}
+    prev=n;
+    var a=angles(n);
+    /* a másodpercmutató 59->0 átmenetnél ne forogjon vissza */
+    if(n.s===0){ss.style.transition="none";ss.style.transform="rotate(0deg)";void ss.getBoundingClientRect();ss.style.transition=""}
+    else ss.style.transform="rotate("+a.s+"deg)";
+    mm.style.transform="rotate("+a.m+"deg)";
+    hh.style.transform="rotate("+a.h+"deg)";
+    status(n);
+    setTimeout(tick,1000);
+  }
+  if(still)tick();
+
+  /* GYIK */
+  document.querySelectorAll(".q button").forEach(function(b){
+    b.addEventListener("click",function(){
+      var q=b.parentNode,o=!q.classList.contains("open");
+      q.classList.toggle("open",o);b.setAttribute("aria-expanded",o);
+    });
+  });
+
+  /* sütik */
+  var ck=$("ck"),ok=$("ck-ok"),accepted=false;
+  try{accepted=localStorage.getItem("korhaz-cookie")==="1"}catch(e){}
+  if(!accepted){
+    ck.hidden=false;document.body.style.overflow="hidden";
+    setTimeout(function(){ok.focus()},900);
+    ok.addEventListener("click",function(){
+      try{localStorage.setItem("korhaz-cookie","1")}catch(e){}
+      ck.classList.add("gone");document.body.style.overflow="";
+      setTimeout(function(){ck.hidden=true},500);
+    });
+  }
+})();
+</script>
+</body>
+</html>
